@@ -1,0 +1,196 @@
+/* رفيق البر — شاشة النظارة تضيف ضوءًا فوق المنظر: الأسود شفاف، والنص الفاتح يظهر. */
+:root {
+  --gold: #C8A45D;
+  --white: #FFFFFF;
+  --soft: #D6D6D6;
+  --dim: #9A9A9A;
+  --panel: #121212;
+  --line: #333333;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+body {
+  margin: 0;
+  min-inline-size: 0;
+  background: #000;
+  color: var(--white);
+  font-family: "Noto Kufi Arabic", "Noto Sans Arabic", "Noto Naskh Arabic", system-ui, Tahoma, sans-serif;
+  font-size: clamp(15px, 3.5vmin, 24px);
+  line-height: 1.35;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: .6em;
+  padding: .3em .9em;
+  font-size: .72em;
+  color: var(--dim);
+  border-block-end: 1px solid var(--line);
+}
+.status .title { color: var(--gold); font-weight: 700; }
+.status .ok { color: var(--soft); }
+.status .warn { color: var(--gold); }
+
+.content {
+  min-block-size: 0;
+  overflow: auto;
+  padding: .55em .9em .6em;
+}
+
+.scr { block-size: 100%; min-block-size: 0; }
+
+button {
+  font: inherit;
+  color: var(--white);
+  background: var(--panel);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: .4em .7em;
+  min-block-size: 2.3em;
+}
+button.primary { border-color: var(--gold); color: var(--gold); }
+button[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+:where(button, a, input):focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+input[type="text"] {
+  font: inherit;
+  color: var(--white);
+  background: var(--panel);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: .35em .6em;
+  inline-size: 100%;
+}
+
+small { display: block; font-size: .68em; color: var(--dim); margin-block-start: .15em; }
+p { margin: .2em 0 .5em; }
+.dim { color: var(--dim); font-size: .8em; }
+.sub { color: var(--soft); }
+.big { font-size: 2.1em; font-weight: 700; line-height: 1.1; }
+.tip { color: var(--gold); font-size: .85em; }
+.row { display: flex; flex-wrap: wrap; justify-content: center; gap: .4em; }
+.mt { margin-block-start: .6em; }
+
+/* الرئيسية */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5em; }
+.grid button {
+  min-block-size: 3.4em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.02em;
+}
+
+/* التوجه */
+.scr-nav .nav {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  justify-items: center;
+  block-size: 100%;
+  gap: .15em;
+  text-align: center;
+}
+.tname { font-size: 1.1em; color: var(--gold); font-weight: 700; }
+.arrow { min-block-size: 0; block-size: 100%; display: grid; place-items: center; }
+.arrow svg { block-size: 100%; max-block-size: 11em; inline-size: auto; aspect-ratio: 1; transition: transform .3s linear; }
+.ring { fill: none; stroke: #3A3A3A; stroke-width: 1.5; }
+.needle { fill: var(--gold); }
+
+/* رادار وأثر وريح */
+.scr-radar, .scr-track, .scr-wind, .scr-map {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: .45em;
+}
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: .6em;
+  align-items: center;
+  min-block-size: 0;
+}
+.split > svg { inline-size: 100%; block-size: auto; max-block-size: 100%; }#w-svg { transition: transform .3s linear; }
+.list { display: flex; flex-direction: column; gap: .3em; min-block-size: 0; overflow: auto; }
+.list button { text-align: start; font-size: .8em; padding: .3em .5em; min-block-size: 2em; }
+.stats { display: flex; flex-direction: column; gap: .3em; }
+.radar-label { fill: var(--white); font-size: 10px; }
+.radar-dim { fill: var(--dim); font-size: 8px; }
+.trk { fill: none; stroke: var(--soft); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+
+/* الإضافة */
+.add { display: flex; flex-direction: column; gap: .45em; }
+.types { display: grid; grid-template-columns: repeat(3, 1fr); gap: .35em; }
+
+/* الخريطة */
+.map {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  min-block-size: 0;
+  background: #000;
+}
+.maprot { position: absolute; }
+#m-tiles img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  inline-size: 256px;
+  block-size: 256px;
+}
+/* الشاشة تضيف ضوءًا: نخفّف صور القمر الصناعي، ونعكس خريطة الشوارع الفاتحة لتصير داكنة */
+.tiles-sat img { filter: brightness(.6); }
+.tiles-osm img { filter: invert(1) hue-rotate(180deg) brightness(.8) contrast(1.1); }
+#m-over { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; overflow: visible; }
+.me-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  inline-size: 26px;
+  block-size: 26px;
+  transform: translate(-50%, -50%);
+  fill: var(--gold);
+}
+.attr { position: absolute; inset-inline-start: .4em; bottom: .15em; font-size: .5em; color: #8A8A8A; }
+.mapmsg {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 1em;
+  color: var(--soft);
+}
+.mapmsg[hidden] { display: none; }
+
+#toast {
+  position: fixed;
+  inset-inline: 8%;
+  bottom: 4%;
+  padding: .45em .8em;
+  background: #000;
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  color: var(--white);
+  text-align: center;
+  font-size: .85em;
+}

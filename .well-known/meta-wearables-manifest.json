@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "name": "رفيق البر",
+  "description": "ارجع للمخيم، رادار النقاط، أثر المشي، الريح والغروب، والخريطة.",
+  "appearance": {
+    "theme_color": "#C8A45D",
+    "icon": {
+      "src": "../icon.svg",
+      "type": "monochrome"
+    }
+  }
+}
